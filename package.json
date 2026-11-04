@@ -9,13 +9,14 @@
     "test:chromium": "playwright test --project=chromium",
     "test:debug": "playwright test --debug",
     "test:report": "playwright show-report",
-    "codegen": "playwright codegen"
+    "codegen": "playwright codegen https://sauce-demo.myshopify.com/ "
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "@faker-js/faker": "^10.6.0",
     "@playwright/test": "^1.64.1",
     "@types/node": "^26.6.6"
   }
