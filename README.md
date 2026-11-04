@@ -197,7 +197,7 @@ O workflow [`.github/workflows/playwright.yml`](.github/workflows/playwright.yml
 Próximos passos planejados para ampliar a cobertura e as técnicas do projeto:
 
 **Cenários**
-- [ ] Cadastro completo com dados válidos (massa dinâmica)
+- [x] Cadastro completo com dados válidos (massa dinâmica)
 - [ ] Validações de cadastro: campos obrigatórios, e-mail inválido, e-mail já cadastrado
 - [ ] Login com credenciais válidas e inválidas
 - [ ] Busca de produtos (com e sem resultado)
