@@ -1,19 +1,34 @@
 {
-  "name": "estudo_playwright",
+  "name": "playwright-e2e-sauce-demo",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Automação de testes E2E da loja Sauce Demo com Playwright e TypeScript, usando Page Object Model, locators acessíveis e execução contínua no GitHub Actions.",
   "scripts": {
     "test": "playwright test",
     "test:ui": "playwright test --ui",
     "test:chromium": "playwright test --project=chromium",
     "test:debug": "playwright test --debug",
     "test:report": "playwright show-report",
-    "codegen": "playwright codegen https://sauce-demo.myshopify.com/ "
+    "codegen": "playwright codegen https://sauce-demo.myshopify.com/"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "playwright",
+    "typescript",
+    "e2e",
+    "e2e-testing",
+    "test-automation",
+    "page-object-model",
+    "bdd",
+    "faker",
+    "github-actions",
+    "qa",
+    "sauce-demo"
+  ],
+  "author": "Humberto Gouveia",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/humbertogouveia/playwright-e2e-sauce-demo.git"
+  },
   "type": "commonjs",
   "devDependencies": {
     "@faker-js/faker": "^10.6.0",
