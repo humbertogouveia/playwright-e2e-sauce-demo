@@ -25,11 +25,20 @@ export class CadastroPage extends BasePage {
         this.botaoCriar = this.formCadastro.getByRole('button', { name: 'Create' });
     }
 
-    async realizarCadastroDeUsuario(nome:string,sobrenome:string,email:string,senha:string){
+    async preencherFormulario(nome:string,sobrenome:string,email:string,senha:string){
         await this.inputNome.fill(nome)
         await this.inputSobrenome.fill(sobrenome)
         await this.inputEmail.fill(email)
         await this.inputSenha.fill(senha)
+    }
+
+    async clicarNoBotaoCreate() {
         await this.botaoCriar.click()
+    }
+
+    // O campo de e-mail é type="email": o próprio navegador valida o formato
+    // e bloqueia o envio antes do hCaptcha. A mensagem fica em validationMessage.
+    async mensagemDeValidacaoDoEmail(): Promise<string> {
+        return this.inputEmail.evaluate((campo: HTMLInputElement) => campo.validationMessage)
     }
 }
