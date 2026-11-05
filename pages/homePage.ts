@@ -1,4 +1,4 @@
-import {Page,Locator} from '@playwright/test'
+import {Page,Locator,expect} from '@playwright/test'
 import { BasePage } from './basePage'
 
 export class HomePage extends BasePage {
@@ -13,6 +13,7 @@ export class HomePage extends BasePage {
     }
 
     async acessarSignup(){
-        await this.linkTextSignup.click()
+        await this.page.goto('/account/register')
+        await expect(this.page).toHaveTitle('Create Account – Sauce Demo')
     }
 }
