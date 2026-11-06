@@ -16,4 +16,5 @@ export class HomePage extends BasePage {
         await this.page.goto('/account/register')
         await expect(this.page).toHaveTitle('Create Account – Sauce Demo')
     }
+
 }
