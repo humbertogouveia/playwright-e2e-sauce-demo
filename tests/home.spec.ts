@@ -27,3 +27,18 @@ test('Acessar a página de um produto pela Home', async ({ page }) => {
         await expect(homePage.imagemDoProduto()).toBeVisible()
     })
 })
+
+test('Validar busca sem resultados', async ({ page }) => {
+    await test.step('Dado que acesso a página inicial', async () => {
+        await homePage.acessarAplicacao()
+        await expect(homePage.tituloHome).toBeVisible()
+    })
+
+    await test.step('Quando acesso a funcionalidade de busca', async () => {
+        await homePage.acessarFuncionalidadeDeBusca()
+    })
+    await test.step('Então vejo mensagem de busca sem resultados', async () => {
+        await expect(homePage.mensagemDeBuscaSemResultados).toBeVisible()
+    })
+})
+
