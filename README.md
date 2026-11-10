@@ -1,6 +1,6 @@
 # 🎭 Automação E2E com Playwright — Sauce Demo
 
-[![Playwright Tests](https://github.com/<seu-usuario>/estudo_playwright/actions/workflows/playwright.yml/badge.svg)](https://github.com/<seu-usuario>/estudo_playwright/actions/workflows/playwright.yml)
+[![Playwright Tests](https://github.com/<seu-usuario>/estudo_playwright/actions/workflows/playwright.yml/badge.svg)](https://github.com/humbertogouveia/estudo_playwright/actions/workflows/playwright.yml)
 ![Playwright](https://img.shields.io/badge/Playwright-1.64-2EAD33?logo=playwright&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-LTS-339933?logo=node.js&logoColor=white)
