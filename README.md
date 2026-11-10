@@ -311,6 +311,7 @@ O workflow [`.github/workflows/playwright.yml`](.github/workflows/playwright.yml
 
 **Humberto Dente Gouveia** — QA Sênior | Automação de Testes
 
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/humberto-gouveia/)
 [![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white)](https://github.com/humbertogouveia)
 
 ---
