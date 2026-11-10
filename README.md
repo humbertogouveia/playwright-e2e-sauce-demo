@@ -200,7 +200,7 @@ Próximos passos planejados para ampliar a cobertura e as técnicas do projeto:
 - [x] Cadastro completo com dados válidos (massa dinâmica)
 - [x] Validações de cadastro: campos obrigatórios, e-mail inválido, e-mail já cadastrado
 - [x] Login com credenciais válidas e inválidas
-- [ ] Busca de produtos (com e sem resultado)
+- [x] Busca de produtos (com e sem resultado)
 - [ ] Adicionar e remover produtos do carrinho e validar totais
 - [ ] Navegação pelo catálogo e página de produto
 
