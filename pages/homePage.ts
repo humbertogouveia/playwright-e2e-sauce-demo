@@ -2,14 +2,11 @@ import {Page,Locator,expect} from '@playwright/test'
 import { BasePage } from './basePage'
 
 export class HomePage extends BasePage {
-    readonly tituloHome:Locator;
-    readonly linkTextSignup: Locator;
+    readonly tituloHome:Locator = this.page.getByRole('heading',{name:'Sauce Demo'});
+    readonly linkTextSignup: Locator = this.page.getByRole('link',{name:'Sign up'});
 
     constructor(page:Page) {
         super(page);
-
-        this.tituloHome = page.getByRole('heading',{name:'Sauce Demo'});
-        this.linkTextSignup = page.getByRole('link',{name:'Sign up'})
     }
 
     async acessarSignup(){
@@ -17,4 +14,21 @@ export class HomePage extends BasePage {
         await expect(this.page).toHaveTitle('Create Account – Sauce Demo')
     }
 
+    async acessarProdutoPeloNome(nome: string) {
+        await this.page.getByRole('heading', { name: nome, exact: true }).click()
+    }
+
+    // Locators da página do produto: nome no <h1>, preço no <h2>.
+    nomeDoProduto(nome: string): Locator {
+        return this.page.getByRole('heading', { level: 1, name: nome, exact: true })
+    }
+
+    precoDoProduto(preco: string): Locator {
+        return this.page.getByRole('heading', { level: 2, name: preco, exact: true })
+    }
+
+    // A foto principal usa o alt genérico "Product Image", e não o nome do produto.
+    imagemDoProduto(): Locator {
+        return this.page.getByRole('img', { name: 'Product Image', exact: true })
+    }
 }
