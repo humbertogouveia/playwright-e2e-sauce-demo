@@ -21,7 +21,6 @@ export class HomePage extends BasePage {
         await this.page.getByRole('heading', { name: nome, exact: true }).click()
     }
 
-    // Locators da página do produto: nome no <h1>, preço no <h2>.
     nomeDoProduto(nome: string): Locator {
         return this.page.getByRole('heading', { level: 1, name: nome, exact: true })
     }
@@ -30,9 +29,16 @@ export class HomePage extends BasePage {
         return this.page.getByRole('heading', { level: 2, name: preco, exact: true })
     }
 
-    // A foto principal usa o alt genérico "Product Image", e não o nome do produto.
     imagemDoProduto(): Locator {
         return this.page.getByRole('img', { name: 'Product Image', exact: true })
+    }
+
+    botaoAdicionarAoCarrinho(): Locator {
+        return this.page.getByRole('button', { name: 'Add to Cart' })
+    }
+
+    contadorCarrinho(quantidade: number): Locator {
+        return this.page.getByRole('link', { name: `My Cart (${quantidade})`, exact: true })
     }
 
     async acessarFuncionalidadeDeBusca() {
@@ -40,4 +46,9 @@ export class HomePage extends BasePage {
         await expect(this.page).toHaveURL('/search')
     }
 
+    async adicionarProdutoDaHomeAoCarrinhoDeCompras(nomeProduto:string) {
+       await this.page.goto(`/collections/frontpage/products/${nomeProduto}`)
+       await this.botaoAdicionarAoCarrinho().click()
+
+    }
 }

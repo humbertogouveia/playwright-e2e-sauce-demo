@@ -42,3 +42,17 @@ test('Validar busca sem resultados', async ({ page }) => {
     })
 })
 
+test('Adicionar produtos no carrinho',async()=>{
+    await test.step('Dado que acesso a página inicial', async () => {
+        await homePage.acessarAplicacao()
+        await expect(homePage.tituloHome).toBeVisible()
+    })
+
+    await test.step('quando adiciono um produto no carrinho de compras',async()=>{
+      await homePage.adicionarProdutoDaHomeAoCarrinhoDeCompras('grey-jacket')
+    })
+
+    await test.step('Então o contador corresponde a quantidade adicionada',async()=>{
+        await expect(homePage.contadorCarrinho(1)).toBeVisible()
+    })
+})

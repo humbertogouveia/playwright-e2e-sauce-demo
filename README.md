@@ -196,8 +196,9 @@ Legenda: ✅ executado na suíte · ⏸️ implementado e marcado como `fixme` (
 |---|---|
 | Acessar a página de um produto pela Home e validar URL, nome, preço e imagem | ✅ |
 | Acessar a busca pelo cabeçalho e validar a mensagem de busca não realizada | ✅ |
+| Adicionar um produto ao carrinho e validar o contador de itens no cabeçalho | ✅ |
 
-**Resultado atual da suíte:** 5 passed · 4 skipped (fixme)
+**Resultado atual da suíte:** 6 passed · 4 skipped (fixme)
 
 ---
 
@@ -287,7 +288,8 @@ O workflow [`.github/workflows/playwright.yml`](.github/workflows/playwright.yml
 - [x] Página de produto pela Home (nome, preço e imagem)
 - [x] Acesso à busca
 - [x] Busca por termo com resultado e sem resultado
-- [ ] Adicionar e remover produtos do carrinho e validar totais
+- [x] Adicionar produto ao carrinho e validar o contador de itens
+- [ ] Remover produtos do carrinho e validar totais
 - [ ] Navegação pelo catálogo
 - [ ] Reativar cadastro e login completos em um ambiente sem captcha
 
