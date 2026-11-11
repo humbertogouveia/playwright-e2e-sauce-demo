@@ -286,7 +286,7 @@ O workflow [`.github/workflows/playwright.yml`](.github/workflows/playwright.yml
 - [x] Validação de e-mail inválido no cadastro e no login
 - [x] Página de produto pela Home (nome, preço e imagem)
 - [x] Acesso à busca
-- [ ] Busca por termo com resultado e sem resultado
+- [x] Busca por termo com resultado e sem resultado
 - [ ] Adicionar e remover produtos do carrinho e validar totais
 - [ ] Navegação pelo catálogo
 - [ ] Reativar cadastro e login completos em um ambiente sem captcha
