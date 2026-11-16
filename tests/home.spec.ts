@@ -1,44 +1,76 @@
-import { test, expect } from '@playwright/test'
-import { HomePage } from '../pages/homePage'
+import { test, expect } from "@playwright/test"
+import { HomePage } from "../pages/homePage"
 
-let homePage: HomePage;
+let homePage: HomePage
 
-const produto = { nome: 'Grey jacket', preco: '£55.00', slug: 'grey-jacket' }
+const produto = { nome: "Grey jacket", preco: "£55.00", slug: "grey-jacket" }
 
 test.beforeEach(async ({ page }) => {
-    homePage = new HomePage(page);
+  homePage = new HomePage(page)
 })
 
-test('Acessar a página de um produto pela Home', async ({ page }) => {
-    await test.step('Dado que acesso a página inicial', async () => {
-        await homePage.acessarAplicacao()
-        await expect(homePage.tituloHome).toBeVisible()
-    })
+test("Acessar a página de um produto pela Home", async ({ page }) => {
+  await test.step("Dado que acesso a página inicial", async () => {
+    await homePage.acessarAplicacao()
+    await expect(homePage.tituloHome).toBeVisible()
+  })
 
-    await test.step(`Quando clico no produto ${produto.nome}`, async () => {
-        await homePage.acessarProdutoPeloNome(produto.nome)
-    })
+  await test.step(`Quando clico no produto ${produto.nome}`, async () => {
+    await homePage.acessarProdutoPeloNome(produto.nome)
+  })
 
-    await test.step('Então vejo a página do produto com nome, preço e imagem', async () => {
-        // Pela Home, a loja abre /collections/frontpage/products/<slug>
-        await expect(page).toHaveURL(new RegExp(`/products/${produto.slug}$`))
-        await expect(homePage.nomeDoProduto(produto.nome)).toBeVisible()
-        await expect(homePage.precoDoProduto(produto.preco)).toBeVisible()
-        await expect(homePage.imagemDoProduto()).toBeVisible()
-    })
+  await test.step("Então vejo a página do produto com nome, preço e imagem", async () => {
+    // Pela Home, a loja abre /collections/frontpage/products/<slug>
+    await expect(page).toHaveURL(new RegExp(`/products/${produto.slug}$`))
+    await expect(homePage.nomeDoProduto(produto.nome)).toBeVisible()
+    await expect(homePage.precoDoProduto(produto.preco)).toBeVisible()
+    await expect(homePage.imagemDoProduto()).toBeVisible()
+  })
 })
 
-test('Validar busca sem resultados', async ({ page }) => {
-    await test.step('Dado que acesso a página inicial', async () => {
-        await homePage.acessarAplicacao()
-        await expect(homePage.tituloHome).toBeVisible()
-    })
+test("Validar busca sem resultados", async ({ page }) => {
+  await test.step("Dado que acesso a página inicial", async () => {
+    await homePage.acessarAplicacao()
+    await expect(homePage.tituloHome).toBeVisible()
+  })
 
-    await test.step('Quando acesso a funcionalidade de busca', async () => {
-        await homePage.acessarFuncionalidadeDeBusca()
-    })
-    await test.step('Então vejo mensagem de busca sem resultados', async () => {
-        await expect(homePage.mensagemDeBuscaSemResultados).toBeVisible()
-    })
+  await test.step("Quando acesso a funcionalidade de busca", async () => {
+    await homePage.acessarFuncionalidadeDeBusca()
+  })
+  await test.step("Então vejo mensagem de busca sem resultados", async () => {
+    await expect(homePage.mensagemDeBuscaSemResultados).toBeVisible()
+  })
 })
 
+test("Adicionar produtos no carrinho", async () => {
+  await test.step("Dado que acesso a página inicial", async () => {
+    await homePage.acessarAplicacao()
+    await expect(homePage.tituloHome).toBeVisible()
+  })
+
+  await test.step("quando adiciono um produto no carrinho de compras", async () => {
+    await homePage.adicionarProdutoDaHomeAoCarrinhoDeCompras("grey-jacket")
+  })
+
+  await test.step("Então o contador corresponde a quantidade adicionada", async () => {
+    await expect(homePage.contadorCarrinho(1)).toBeVisible()
+  })
+})
+
+test("Retirar produtos do carrinho", async () => {
+  await test.step("Dado que acesso a página inicial", async () => {
+    await homePage.acessarAplicacao()
+    await expect(homePage.tituloHome).toBeVisible()
+  })
+
+  await test.step("quando adiciono e retiro o produto no carrinho de compras", async () => {
+    await homePage.adicionarProdutoDaHomeAoCarrinhoDeCompras("grey-jacket")
+    await expect(homePage.contadorCarrinho(1)).toBeVisible()
+    await homePage.retirarProdutoDoCarrinhoDeCompras()
+    await expect(homePage.contadorCarrinho(0)).toBeVisible()
+  })
+
+  await test.step("Então o contador corresponde a quantidade subtraída", async () => {
+    await expect(homePage.contadorCarrinho(0)).toBeVisible()
+  })
+})
