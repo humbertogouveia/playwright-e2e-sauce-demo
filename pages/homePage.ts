@@ -51,4 +51,10 @@ export class HomePage extends BasePage {
        await this.botaoAdicionarAoCarrinho().click()
 
     }
+
+    async retirarProdutoDoCarrinhoDeCompras() {
+        await this.page.goto('/cart')
+        await expect(this.page).toHaveURL('/cart')
+        await this.page.getByRole('link', { name: 'x', exact: true }).click()
+    }
 }
