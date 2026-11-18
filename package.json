@@ -8,6 +8,10 @@
     "test:chromium": "playwright test --project=chromium",
     "test:debug": "playwright test --debug",
     "test:report": "playwright show-report",
+    "test:cadastro": "playwright test tests/cadastro.spec.ts",
+    "test:catalogo": "playwright test tests/catalogo.spec.ts",
+    "test:home": "playwright test tests/home.spec.ts",
+    "test:login": "playwright test tests/login.spec.ts",
     "codegen": "playwright codegen https://sauce-demo.myshopify.com/"
   },
   "keywords": [
