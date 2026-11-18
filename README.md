@@ -289,7 +289,7 @@ O workflow [`.github/workflows/playwright.yml`](.github/workflows/playwright.yml
 - [x] Acesso à busca
 - [x] Busca por termo com resultado e sem resultado
 - [x] Adicionar produto ao carrinho e validar o contador de itens
-- [ ] Remover produtos do carrinho e validar totais
+- [x] Remover produtos do carrinho e validar totais
 - [ ] Navegação pelo catálogo
 - [ ] Reativar cadastro e login completos em um ambiente sem captcha
 
