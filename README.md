@@ -62,16 +62,22 @@ playwright-e2e-sauce-demo/
 │       └── playwright.yml               # Pipeline de CI
 ├── pages/                               # Page Objects
 │   ├── basePage.ts                      # Classe base: Page compartilhada + navegação para a Home
-│   ├── homePage.ts                      # Home, página de produto e acesso à busca
+│   ├── homePage.ts                      # Home, página de produto, busca e carrinho
+│   ├── catalogoPage.ts                  # Página de coleção: grade, preços e selo "Sold Out"
+│   ├── produtoPage.ts                   # Página de detalhes do produto (PDP)
+│   ├── carrinhoPage.ts                  # Contador do cabeçalho, itens e total do carrinho
 │   ├── cadastroPage.ts                  # Formulário de cadastro
 │   └── loginPage.ts                     # Formulário de login
 ├── support/
+│   ├── data/
+│   │   └── produtosCatalogo.ts          # Massa fixa dos produtos do catálogo
 │   └── factories/
 │       └── clienteComDadosValidos.ts    # Factory de cliente com Faker
 ├── tests/
 │   ├── cadastro.spec.ts                 # Cenários de cadastro
+│   ├── catalogo.spec.ts                 # Cenários da página de coleção
 │   ├── login.spec.ts                    # Cenários de login
-│   └── home.spec.ts                     # Cenários de produto e busca
+│   └── home.spec.ts                     # Cenários de produto, busca e carrinho
 ├── .env.example                         # Modelo das variáveis de ambiente
 ├── playwright.config.ts                 # Configuração central (baseURL, retries, trace, dotenv)
 └── package.json                         # Dependências e scripts npm
@@ -147,6 +153,22 @@ const clienteComEmailInvalido = criarCliente({ email: 'teste@' })
 const clienteSemEmailESenha = criarCliente({ email: '', senha: '' })
 ```
 
+### Testes data-driven a partir de uma massa fixa
+
+Os produtos do catálogo ficam em `support/data/produtosCatalogo.ts`, com nome, preço, slug e se estão esgotados. A spec percorre essa lista e gera um teste por produto, cada um com nome próprio no relatório. Se a loja mudar um preço ou um produto, basta atualizar a lista.
+
+```ts
+// tests/catalogo.spec.ts
+for (const produto of produtosCatalogo) {
+  test(`Exibir nome e preço do produto ${produto.nome}`, { tag: ['@smoke', '@colecao'] }, async () => {
+    await test.step(`Então devo ver o produto "${produto.nome}" com o preço "${produto.preco}"`, async () => {
+      await expect(catalogoPage.cardDoProduto(produto.nome)).toBeVisible()
+      await expect(catalogoPage.precoNoCard(produto.nome)).toHaveText(produto.preco)
+    })
+  })
+}
+```
+
 ---
 
 ## ✅ Boas práticas aplicadas
@@ -156,6 +178,9 @@ const clienteSemEmailESenha = criarCliente({ email: '', senha: '' })
 - **Métodos parametrizados**: `acessarProdutoPeloNome(nome)`, `preencherFormulario(...)` e `preencherCamposDeLogin(email, senha)` servem para cenários positivos e negativos.
 - **Ações separadas por etapa**: preencher e enviar são métodos distintos, o que deixa cada `test.step` com uma única responsabilidade.
 - **Massa dinâmica com Faker** e factory com sobrescrita de campos.
+- **Testes data-driven**: uma lista de produtos gera um teste por item, sem duplicar código.
+- **Tags** (`@smoke`, `@estoque`, `@e2e`, `@navegacao`...) para rodar só um grupo de cenários com `--grep`.
+- **Locators que refletem o comportamento real da tela**: o link "My Cart (n)" tem `href="#"` e só abre o mini-carrinho, então a navegação para `/cart` usa o link "Check Out". O "Remove" do mini-carrinho fica oculto, então a remoção usa o link "x" visível na página do carrinho.
 - **Credenciais fora do código**: lidas de `USER_EMAIL` e `USER_PASSWORD` via `dotenv`. O `.env` fica no `.gitignore`, e o `.env.example` documenta as variáveis.
 - **`baseURL` centralizada**: os testes navegam com caminhos relativos (`/`, `/account/login`).
 - **Web-first assertions** (`toBeVisible`, `toHaveURL`, `toHaveText`) com retry automático, sem `sleep` nem esperas fixas.
@@ -197,8 +222,22 @@ Legenda: ✅ executado na suíte · ⏸️ implementado e marcado como `fixme` (
 | Acessar a página de um produto pela Home e validar URL, nome, preço e imagem | ✅ |
 | Acessar a busca pelo cabeçalho e validar a mensagem de busca não realizada | ✅ |
 | Adicionar um produto ao carrinho e validar o contador de itens no cabeçalho | ✅ |
+| Remover um produto do carrinho e validar o contador zerado | ✅ |
 
-**Resultado atual da suíte:** 6 passed · 4 skipped (fixme)
+### Catálogo: `tests/catalogo.spec.ts`
+
+| Cenário | Testes | Tags | Status |
+|---|---|---|---|
+| Exibir a página de coleção (título, breadcrumb e quantidade de produtos) | 1 | `@smoke` `@colecao` | ✅ |
+| Exibir nome e preço de cada produto da grade | 7 | `@smoke` `@colecao` | ✅ |
+| Exibir o selo "Sold Out" só nos produtos esgotados | 7 | `@regra-negocio` `@estoque` | ✅ |
+| Abrir a página de detalhes do produto a partir da coleção | 3 | `@navegacao` | ✅ |
+| Adicionar ao carrinho um produto disponível e validar contador, item e total | 1 | `@e2e` `@carrinho` | ✅ |
+| Impedir a compra de um produto esgotado (botão "Sold Out" desabilitado) | 1 | `@negativo` `@estoque` | ✅ |
+
+> O slug do produto "Black heels" é `flower-print-jeans`. A página do produto mostra os dados certos, então não é um defeito, mas o teste de navegação confere o título da página além da URL.
+
+**Resultado atual da suíte:** 27 passed · 4 skipped (fixme)
 
 ---
 
@@ -250,11 +289,30 @@ cp .env.example .env
 | `npm run test:report` | Abre o último relatório HTML |
 | `npm run codegen` | Abre o **Codegen** na loja para gravar interações e gerar locators |
 
-Para rodar só uma parte da suíte:
+### Scripts por spec
+
+Cada arquivo de `tests/` tem um script próprio, para rodar só a funcionalidade em que você está trabalhando:
+
+| Comando | Spec executada | Cobertura |
+|---|---|---|
+| `npm run test:cadastro` | `tests/cadastro.spec.ts` | Formulário de cadastro |
+| `npm run test:catalogo` | `tests/catalogo.spec.ts` | Página de coleção, estoque e carrinho a partir do catálogo |
+| `npm run test:home` | `tests/home.spec.ts` | Home, página de produto, busca e carrinho |
+| `npm run test:login` | `tests/login.spec.ts` | Formulário de login |
+
+Os scripts aceitam as opções do Playwright depois de `--`:
 
 ```bash
-npx playwright test tests/login.spec.ts       # um arquivo
+npm run test:catalogo -- --headed              # com o navegador visível
+npm run test:home -- --project=chromium        # só no Chromium
+npm run test:login -- --debug                  # com o Playwright Inspector
+```
+
+Para rodar outras partes da suíte:
+
+```bash
 npx playwright test -g "formato inválido"     # pelo título do cenário
+npx playwright test --grep @smoke             # por tag
 ```
 
 ---
@@ -290,7 +348,8 @@ O workflow [`.github/workflows/playwright.yml`](.github/workflows/playwright.yml
 - [x] Busca por termo com resultado e sem resultado
 - [x] Adicionar produto ao carrinho e validar o contador de itens
 - [x] Remover produtos do carrinho e validar totais
-- [ ] Navegação pelo catálogo
+- [x] Navegação pelo catálogo (grade, preços, página de produto)
+- [x] Indicação de produtos esgotados e bloqueio da compra
 - [ ] Reativar cadastro e login completos em um ambiente sem captcha
 
 **Técnicas**
@@ -299,10 +358,12 @@ O workflow [`.github/workflows/playwright.yml`](.github/workflows/playwright.yml
 - [x] Geração de massa de dados com Faker
 - [x] Variáveis de ambiente com `dotenv`
 - [ ] Fixtures customizadas para injetar os Page Objects nos testes
-- [ ] Testes data-driven (lista de produtos)
+- [x] Testes data-driven (lista de produtos)
+- [x] Scripts npm por spec
+- [x] Tags nos cenários (`@smoke`, `@estoque`, `@e2e`...)
 - [ ] Reaproveitar sessão autenticada com `storageState`
 - [ ] Execução cross-browser (Firefox, WebKit) e viewports mobile
-- [ ] Tags (`@smoke`, `@regression`) para filtrar suítes no CI
+- [ ] Filtrar suítes por tag no CI (ex.: `@smoke` a cada push)
 - [ ] Screenshot e vídeo em falhas
 - [ ] Publicação do relatório no GitHub Pages
 
